@@ -1,3 +1,5 @@
-# 告诉所有搜索引擎：不要爬 /closet/ 及其全部子文件
+# 告诉所有搜索引擎：不要爬 /closet/ /secret-nook/ /foundation/ 及其内部全部子文件
 User-agent: *
 Disallow: /closet/
+Disallow: /secret-nook/
+Disallow: /foundation/
