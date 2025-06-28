@@ -2,10 +2,92 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>小白屋今日上线！</title>
+  <title>欢迎来到小白屋 · Whitewu.uno</title>
+
+  <!-- ① 全局配色 -->
+  <style>
+    :root{
+      --text-main:#3A3A3A;      /* 系统正文色 */
+      --erynn:#715C91;          /* 备用：Erynn 主色 */
+      --erynn-hi:#9982BD;
+      --chinar:#D3B46C;         /* 备用：Chinar 主色 */
+      --chinar-hi:#E6C77F;
+      --footer:#EDEFF2;         /* 底栏 */
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans",sans-serif;
+      background:#fff;
+      color:var(--text-main);
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+      align-items:center;
+    }
+
+    /* ② 小白屋图片与半透明覆层 */
+    .house-wrapper{
+      position:relative;
+      max-width:480px;       /* 视需要调整尺寸 */
+      width:90%;
+      margin:4rem auto 2.5rem;
+    }
+    .house-wrapper img{
+      width:100%;
+      display:block;
+    }
+    .overlay{
+      position:absolute;
+      inset:0;               /* 覆盖整张图片 */
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(255,255,255,0.75);  /* 半透明白 */
+      text-align:center;
+      font-size:1.3rem;
+      pointer-events:none;   /* 避免挡住图片右键等操作 */
+    }
+
+    /* ③ 共同创作声明 */
+    .declaration{
+      text-align:center;
+      margin-bottom:2rem;
+      font-size:1.1rem;
+    }
+
+    /* ④ 半透明印章 */
+    .seal{
+      width:140px;           /* 依实际印章尺寸调整 */
+      opacity:0.8;           /* 半透明 */
+      display:block;
+      margin:0 auto 3.5rem;
+    }
+
+    /* ⑤ 底栏 */
+    footer{
+      margin-top:auto;       /* 推到底 */
+      width:100%;
+      height:36px;
+      background:var(--footer);
+    }
+  </style>
 </head>
 <body>
-  <h1>欢迎来到我的小白屋（whitewu.uno）！</h1>
-  <p>这个世界上只有一间的小白屋 -- 就在这里啦。</p>
+
+  <h1 style="margin-top:2rem;text-align:center;">欢迎来到小白屋 | Welcome&nbsp;to&nbsp;Whitewu.uno</h1>
+
+  <!-- 小白屋主图 + 覆层 -->
+  <figure class="house-wrapper">
+    <img src="/assets/img/house.png" alt="小白屋示意图">
+    <div class="overlay">装修作业中</div>
+  </figure>
+
+  <!-- 共同创作声明 -->
+  <p class="declaration">Chinar&nbsp;&amp;&nbsp;Erynn&nbsp;共同创作声明</p>
+
+  <!-- 个人印章 -->
+  <img src="/assets/img/seal.jpg" alt="Erynn印章" class="seal">
+
+  <footer></footer>
 </body>
 </html>
