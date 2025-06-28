@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>小白屋 · 音乐房</title>
+  <style>
+    body{font-family:system-ui;margin:2rem;background:#fafafa}
+    .player{display:flex;gap:1rem;align-items:center}
+    ul{list-style:none;padding:0}
+    li{margin:.5rem 0;cursor:pointer}
+  </style>
+</head>
+<body>
+  <h1>🎵 小白屋 · 音乐房</h1>
+
+  <div class="player">
+    <audio id="audio" controls preload="metadata">
+      <source src="track01.mp3" type="audio/mpeg">
+      你的浏览器不支持 audio 标签。
+    </audio>
+    <span id="now">track01.mp3</span>
+  </div>
+
+  <ul id="list">
+    <li data-src="track01.mp3">track01.mp3</li>
+    <!-- 以后继续加 -->
+    <!-- <li data-src="track02.mp3">track02.mp3</li> -->
+  </ul>
+
+  <script>
+    const audio=document.getElementById('audio');
+    const now=document.getElementById('now');
+    document.getElementById('list').onclick=e=>{
+      if(e.target.dataset.src){
+        audio.src=e.target.dataset.src;
+        audio.play();
+        now.textContent=e.target.textContent;
+      }
+    };
+  </script>
+</body>
+</html>
