@@ -1,0 +1,57 @@
+/* --- 小白屋 · 全局样式表 --- */
+
+/* 1️⃣ 主题色与字号变量 */
+:root{
+  --erynn:      #715C91;
+  --erynn-hi:   #9982BD;
+  --chinar:     #D3B46C;
+  --chinar-hi:  #E6C77F;
+  --text-main:  #3A3A3A;
+  --bg-main:    #FFFFFF;
+  --footer-bg:  #EDEFF2;
+
+  --fs-h1:  2rem;   /* 32px */
+  --fs-h2:  1.2rem; /* 19px */
+  --fs-body:1rem;   /* 16px */
+}
+
+/* 2️⃣ 基础排版 */
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans",sans-serif;
+  color:var(--text-main);
+  background:var(--bg-main);
+}
+h1{font-size:var(--fs-h1);margin:1.5rem 0 .8rem;font-weight:600;}
+h2{font-size:var(--fs-h2);margin:1.2rem 0 .6rem;font-weight:600;}
+p {font-size:var(--fs-body);line-height:1.6;margin:.8rem 0;}
+
+/* 3️⃣ 链接 */
+a{color:var(--erynn);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* 4️⃣ 版心容器 */
+.container{max-width:860px;margin:auto;padding:0 1rem;}
+
+/* 5️⃣ 房间网格导航（十字屋用） */
+.room-grid{
+  display:grid;
+  gap:1.2rem;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+}
+.room-card{
+  padding:1rem 0.5rem;
+  border:1px solid #eee;
+  border-radius:8px;
+  text-align:center;
+  transition:transform .15s;
+}
+.room-card:hover{transform:translateY(-4px);}
+
+/* 6️⃣ 返回链接小按钮 */
+.back-home{
+  display:inline-block;
+  margin:.8rem 0;
+  font-size:.9rem;
+}
