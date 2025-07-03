@@ -1,58 +1,14 @@
-<link rel="stylesheet" href="/assets/css/global.css">
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <title>音乐屋 · musicwu</title>
-  <style>
-    body{font-family:system-ui;margin:2rem;background:#fafafa}
-    .player{display:flex;gap:1rem;align-items:center}
-    ul{list-style:none;padding:0}
-    li{margin:.5rem 0;cursor:pointer}
-  </style>
+  <link rel="stylesheet" href="/assets/css/global.css">
 </head>
-<body>
-  <h1>🎵 音乐屋 · musicwu</h1>
+<body class="container">
 
-
-  <!-- 把返回按钮放这里 ↓↓↓ -->
-  <a href="/crosswu/" class="back-home" style="
-        display:inline-block;
-        padding:4px 10px;
-        border:1px solid var(--erynn);
-        border-radius:6px;
-        background:var(--erynn-hi);
-        color:#fff;
-        text-decoration:none;">🏠 回到十字屋</a>
-
-  <!-- 下面才是房间内容 -->
-
-
-  <div class="player">
-    <audio id="audio" controls preload="metadata">
-      <source src="DOUDOU - 嗵嗵.mp3" type="audio/mpeg">
-      你的浏览器不支持 audio 标签。
-    </audio>
-    <span id="now">track01.mp3</span>
-  </div>
-
-  <ul id="list">
-    <li data-src="track01.mp3">DOUDOU - 嗵嗵.mp3</li>
-    <!-- 测试：嗵嗵mp3，以后继续加 -->
-    <!-- <li data-src="track02.mp3">track02.mp3</li> -->
-  </ul>
-
-  <script>
-    const audio=document.getElementById('audio');
-    const now=document.getElementById('now');
-    document.getElementById('list').onclick=e=>{
-      if(e.target.dataset.src){
-        audio.src=e.target.dataset.src;
-        audio.play();
-        now.textContent=e.target.textContent;
-      }
-    };
-  </script>
+  <h1>音乐屋 · musicwu</h1>
+<br>
 
   <section class="room-grid">
     <a class="room-card" href="/musicwu/"><span>🎵 音乐屋<br>musicwu</span></a>
@@ -61,6 +17,36 @@
     <a class="room-card" href="/gallerywu/"><span>🖼️ 图影屋<br>gallerywu</span></a>
     <a class="room-card" href="/playyard/"><span>🌿 小后院<br>playyard</span></a>
   </section>
-  <footer class="tatami"></footer>
+<br>
+
+  <h1>小白屋 · 歌单 v0.1</h1>
+<br>
+
+  <div class="player">
+    <audio id="audio" controls preload="metadata">
+      <source src="/assets/music/DOUDOU - 嗵嗵.mp3" type="audio/mpeg">
+      你的浏览器不支持 audio 标签。
+    </audio>
+    <span id="now">DOUDOU - 嗵嗵.mp3</span>
+  </div>
+
+  <ul id="list">
+    <li data-src="/assets/music/track01.mp3">DOUDOU - 嗵嗵.mp3</li>
+    <li data-src="/assets/music/track02.mp3">track02.mp3</li>
+  </ul>
+
+  <script>
+    const audio = document.getElementById('audio');
+    const now   = document.getElementById('now');
+    document.getElementById('list').onclick = e=>{
+      if(e.target.dataset.src){
+        audio.src = e.target.dataset.src;
+        audio.play();
+        now.textContent = e.target.textContent;
+      }
+    };
+  </script>
+
+<footer class="tatami"></footer>
 </body>
 </html>
