@@ -5,33 +5,35 @@
   <title>音乐屋 · musicwu</title>
   <link rel="stylesheet" href="/assets/css/global.css">
 </head>
-<body class="container">
+<body>
+  <header class="site-bar">
+    <div class="inner">
+      <strong>小白屋 · whitewu</strong>
+      <a href="/crosswu/">十字屋</a>
+      <a href="/musicwu/">音乐屋</a>
+      <a href="/logwu/">记事屋</a>
+      <a href="/creationwu/">造物屋</a>
+      <a href="/gallerywu/">图影屋</a>
+      <a href="/playyard/">小后院</a>
+    </div>
+  </header>
 
-  <h1>音乐屋 · musicwu</h1>
-<br>
-
-  <section class="room-grid">
-    <a class="room-card" href="/musicwu/"><span>🎵 音乐屋<br>musicwu</span></a>
-    <a class="room-card" href="/logwu/"><span>📜 记事屋<br>logwu</span></a>
-    <a class="room-card" href="/creationwu/"><span>🪄 造物屋<br>creationwu</span></a>
-    <a class="room-card" href="/gallerywu/"><span>🖼️ 图影屋<br>gallerywu</span></a>
-    <a class="room-card" href="/playyard/"><span>🌿 小后院<br>playyard</span></a>
-  </section>
-<br>
+  <main class="container">
+     <!-- 现有页面内容搬到这里 -->
 
   <h1>小白屋 · 歌单 v0.1</h1>
-<br>
+  <br>
 
   <div class="player">
     <audio id="audio" controls preload="metadata">
-      <source src="/assets/music/DOUDOU - 嗵嗵.mp3" type="audio/mpeg">
+      <source src="/assets/music/嗵嗵.mp3" type="audio/mpeg">
       你的浏览器不支持 audio 标签。
     </audio>
-    <span id="now">DOUDOU - 嗵嗵.mp3</span>
+    <span id="now">嗵嗵.mp3</span>
   </div>
 
   <ul id="list">
-    <li data-src="/assets/music/track01.mp3">DOUDOU - 嗵嗵.mp3</li>
+    <li data-src="/assets/music/track01.mp3">嗵嗵.mp3</li>
     <li data-src="/assets/music/track02.mp3">track02.mp3</li>
   </ul>
 
@@ -47,6 +49,9 @@
     };
   </script>
 
-<footer class="tatami"></footer>
+  </main>
+
+  <footer class="tatami"></footer>
 </body>
+
 </html>
