@@ -13,9 +13,12 @@
   --fs-h1:  2rem;   /* 32px */
   --fs-h2:  1.2rem; /* 19px */
   --fs-body:1rem;   /* 16px */
-}
-/* ---- 让文字使用 Erynn 专属颜色 ---- */
+
+  /* ---- 让文字使用 Erynn 专属颜色 ---- */
 .erynn-text{ color: var(--erynn); }
+
+}
+
 
 /* 2️⃣ 基础排版 */
 *{box-sizing:border-box;}
