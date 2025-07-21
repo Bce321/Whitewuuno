@@ -1,0 +1,48 @@
+/* 整页把游戏区域居中显示 */
+html,body{
+   margin:0;
+   min-height:100vh;            /* 关键：铺满整个视口高度 */
+   width:100%;                 /* 关键：让 flex 容器横向也占满 */
+   display:flex;            /* ① 开启 Flex 布局 */
+   align-items:center;      /* ② 垂直居中 */
+   justify-content:center;  /* ③ 水平居中 */
+   background:#0e1b48;      /* 深蓝或你喜欢的背景色 */
+   touch-action:none;
+}
+
+.game-wrap{
+  width:1536px;
+  height:1024px;
+  position:relative;          /* 给 .bubble 定位基准 */
+}
+
+/* 画布 用它自身的 width/height 像素尺寸渲染 */
+#game{display:block;}          /* 保留 display:block 即可 */
+
+/* Emoji 对话气泡保持不变，但 top/left 需相对 .game-wrap */
+.bubble{
+  position:absolute;
+  /* 其余同前… */
+}
+
+
+/* Emoji 对话气泡 */
+.bubble{
+  position:absolute;
+  padding:3px 7px;
+  font-size:18px;
+  background:rgba(0,0,0,.55);
+  color:#fff;
+  border-radius:6px;
+  pointer-events:none;
+ animation:fade 2.5s ease-out forwards;   /* 普通气泡仅淡出 ✱ 用 float 动画 */
+}
+
+/* 新增：专供惊叫用的漂浮动画 */
+.bubble.float{ animation:float 2.5s ease-out forwards; }
+
+@keyframes fade  {0%{opacity:1}100%{opacity:0}}
+@keyframes float{
+  0%  {opacity:1; transform:translateY(0);}
+  100%{opacity:0; transform:translateY(-24px);}  /* 向上漂 24px */
+}
