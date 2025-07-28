@@ -25,7 +25,6 @@ html,body{
   /* 其余同前… */
 }
 
-
 /* Emoji 对话气泡 */
 .bubble{
   position:absolute;
@@ -45,4 +44,12 @@ html,body{
 @keyframes float{
   0%  {opacity:1; transform:translateY(0);}
   100%{opacity:0; transform:translateY(-24px);}  /* 向上漂 24px */
+}
+
+/* 宽度 < 1536 时整块 .game-wrap 按比例缩小，取满屏 */
+@media (max-width: 1536px){
+  .game-wrap{
+    transform: scale(calc(100vw / 1536));
+    transform-origin: top left;
+  }
 }
