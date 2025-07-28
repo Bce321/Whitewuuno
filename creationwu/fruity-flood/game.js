@@ -84,28 +84,61 @@ function speak(unit,cat){
 /*function resetTimer(){ startT = performance.now(); cakeBuilt=false; } */
 
 /*****  海浪控制  *****/
-let wavePhase = 0, waveX = 0, waveY = 0;
-let waveCooldown = false;        // 浪后冷却标记
-let waveCooldownStart = 0;       // 冷却开始时间
-let waveStart = 0;              // ① 记录浪开始的时间
-const WAVE_DURATION = 5000;     // ② 浪持续 5 秒（可改 3000‑5000）
-cvs.addEventListener('pointerdown', triggerWave);
-function triggerWave(){
-  wavePhase=1; waveX=0; waveY=0;
-  waveStart = performance.now();     // ③ 新增，标记开始时间
- // 随机挑最多 5 个水果小人冒泡（先取再清）
- const panicList = fruits
-     .slice().sort(()=>0.5-Math.random())
-     .slice(0, Math.min(5, fruits.length));
-panicList.forEach(f=>speak(f,'panic'));
+/*****  海浪控制（整段替换版） *****/
+let wavePhase   = 0;              // 0=平静 1=浪滚
+let waveX = 0, waveY = 0;
+let waveStart   = 0;              // 浪开始时刻
+const WAVE_DURATION = 5000;       // 浪持续 5 秒
 
- fruits = [];                        // ② 现在再清空数组
-  /* 原resettimer 现彻底重置时间轴与计数 */
-  stage      = 'idle';
-  stageStart = performance.now();
-  cakeCount  = 0;
-  spawnTimer = 0;
+/* 冷却：浪结束后 5 秒内禁止再触发 */
+let waveCooldown       = false;
+let waveCooldownStart  = 0;
+const WAVE_COOLDOWN_MS = 5000;
+
+/* 点击触发浪 */
+cvs.addEventListener('pointerdown', () => {
+  /* 若冷却中则忽略点击 */
+  if (waveCooldown) return;
+
+  /* —— 1. 进入浪动画 —— */
+  wavePhase  = 1;
+  waveX = 0; waveY = 0;
+  waveStart  = performance.now();
+
+  /* —— 2. 随机 ≤5 个小人冒 panic 泡泡 —— */
+  const panicList = fruits
+        .slice()
+        .sort(()=>0.5 - Math.random())
+        .slice(0, Math.min(5, fruits.length));
+  panicList.forEach(f => speak(f,'panic'));
+
+  /* —— 3. 清空小人、彻底重置时间轴 —— */
+  fruits = [];
+  stage        = 'idle';
+  stageStart   = performance.now();
+  cakeCount    = 0;
+  spawnTimer   = 0;
+});
+
+/* 在 drawWave() 尾部检测浪结束（保持之前的画浪逻辑） */
+function checkWaveEnd(){
+  if (wavePhase === 1 &&
+      performance.now() - waveStart >= WAVE_DURATION){
+      wavePhase = 0;   // 浪停
+      waveX = 0; waveY = 0;
+
+      /* 开启 5 秒冷却 */
+      waveCooldown      = true;
+      waveCooldownStart = performance.now();
+  }
+
+  /* 冷却计时 */
+  if (waveCooldown &&
+      performance.now() - waveCooldownStart >= WAVE_COOLDOWN_MS){
+      waveCooldown = false;       // 冷却完毕，可再触浪
+  }
 }
+
 
 /*****  主循环  *****/
 let lastSpawn = 0;
@@ -179,40 +212,45 @@ function drawWave(){
 
 }
 
+/*****  循环时间轴 *****/
+
+/* ------- 统一计时的 tick()，每秒由 setInterval 调用 ------- */
 function tick(){
-  /* --- 后台阶段推进 --- */
   const now   = Date.now();
-  const delta = now - stageStart;
+  const delta = now - stageStart;   // 距离当前阶段开始了多久（毫秒）
 
-  /* 1. 进入下一个阶段 */
-  if(delta >= STAGE_LEN){
-    if(stage === 'idle'){            // idle → build
+  /* ---------- 阶段推进 ---------- */
+  if (stage === 'idle' && delta >= STAGE_LEN){
       stage = 'build';
-    }else if(stage === 'build'){
-      if(cakeCount < 5){
-        buildCake();
-        cakeCount++;
-        if(cakeCount >= 5){ stage = 'celebrate'; }
+      stageStart = now;             // 进入 build 阶段
+  }
+  else if (stage === 'build' && delta >= STAGE_LEN){
+      if (cakeCount < 5){
+          buildCake();              // 生成蛋糕
+          cakeCount++;
+          stageStart = now;         // 重置 5 分钟计时
+          if (cakeCount >= 5){
+              stage = 'celebrate';  // 达到上限 → 庆祝
+          }
       }
-    }
-    stageStart = now;                // 重置阶段计时
   }
 
-  /* 2. 刷小人（只在 idle & build 且无浪/冷却时） */
-  if((stage === 'idle' || stage === 'build') && wavePhase===0 && !waveCooldown){
-    spawnTimer += 1000;
-    if(spawnTimer >= 3000){          // 每 3 秒
-      spawnFruit();
-      spawnTimer = 0;
-      if(stage === 'idle'){ speak(fruits.at(-1),'call'); }
-      if(stage === 'build'){ speak(fruits.at(-1),'build'); }
-    }
+  /* ---------- 刷水果小人 ---------- */
+  if ((stage === 'idle' || stage === 'build') && wavePhase===0 && !waveCooldown){
+      spawnTimer += delta;          // 用 delta 计时更准确
+      if (spawnTimer >= 3000){      // 每 3 秒刷一只
+          spawnFruit();
+          spawnTimer = 0;
+          const last = fruits.at(-1);
+          if (stage === 'idle')  speak(last,'call');
+          if (stage === 'build') speak(last,'build');
+      }
   }
 
-  /* 3. celebrate 阶段随机欢呼气泡 */
-  if(stage === 'celebrate' && Math.random() < 0.3){
-     const f = fruits[Math.random()*fruits.length|0];
-     if(f) speak(f,'cheer');
+  /* ---------- 庆祝阶段随机欢呼 ---------- */
+  if (stage === 'celebrate' && Math.random() < 0.3){
+      const f = fruits[Math.random()*fruits.length|0];
+      if (f) speak(f,'cheer');
   }
 }
 
