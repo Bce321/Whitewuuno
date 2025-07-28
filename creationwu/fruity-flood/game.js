@@ -38,7 +38,7 @@ class Fruit{
   constructor(img){
     this.img = img;
     this.x = Math.random()*cvs.width;
-    this.y = Math.random()*cvs.height*0.6 + 40;
+    this.y = 40 + Math.random() * (cvs.height - 140);   // 顶部 40 px 和底部 100 px 留空
     this.seed = Math.random()*Math.PI*2;   // ① 新增
   }
   draw(){  const wobble = Math.sin(performance.now()/120 + this.seed)*1; // ② 新增
