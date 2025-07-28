@@ -9,6 +9,14 @@ function resize(){
   cvs.height = window.innerHeight;
 }
 
+/* --- 计时&阶段 --- */
+const STAGE_LEN     = 5 * 60 * 1000;   // 5 分钟
+let   stageStart    = Date.now();      // 当前阶段开始时刻
+let   stage         = 'idle';          // idle | build | celebrate
+let   cakeCount     = 0;               // 已出现蛋糕数 (上限 5)
+let   spawnTimer    = 0;               // 累积刷小人计时
+
+
 /*****  图片资源  *****/
 const IMG = {};
 const paths = {
@@ -70,10 +78,10 @@ function speak(unit,cat){
   setTimeout(()=>div.remove(),2500);
 }
 
-/*****  番茄钟  *****/
-const POMO = 25*60*1000;   // 25 分钟
-let startT = performance.now();
-function resetTimer(){ startT = performance.now(); cakeBuilt=false; }
+/*****  番茄钟【应该删掉的】  *****/
+/*const POMO = 25*60*1000;   // 25 分钟 */
+/*let startT = performance.now(); */
+/*function resetTimer(){ startT = performance.now(); cakeBuilt=false; } */
 
 /*****  海浪控制  *****/
 let wavePhase = 0, waveX = 0, waveY = 0;
@@ -92,7 +100,11 @@ function triggerWave(){
 panicList.forEach(f=>speak(f,'panic'));
 
  fruits = [];                        // ② 现在再清空数组
- resetTimer();
+  /* 原resettimer 现彻底重置时间轴与计数 */
+  stage      = 'idle';
+  stageStart = performance.now();
+  cakeCount  = 0;
+  spawnTimer = 0;
 }
 
 /*****  主循环  *****/
@@ -166,3 +178,42 @@ function drawWave(){
   }
 
 }
+
+function tick(){
+  /* --- 后台阶段推进 --- */
+  const now   = Date.now();
+  const delta = now - stageStart;
+
+  /* 1. 进入下一个阶段 */
+  if(delta >= STAGE_LEN){
+    if(stage === 'idle'){            // idle → build
+      stage = 'build';
+    }else if(stage === 'build'){
+      if(cakeCount < 5){
+        buildCake();
+        cakeCount++;
+        if(cakeCount >= 5){ stage = 'celebrate'; }
+      }
+    }
+    stageStart = now;                // 重置阶段计时
+  }
+
+  /* 2. 刷小人（只在 idle & build 且无浪/冷却时） */
+  if((stage === 'idle' || stage === 'build') && wavePhase===0 && !waveCooldown){
+    spawnTimer += 1000;
+    if(spawnTimer >= 3000){          // 每 3 秒
+      spawnFruit();
+      spawnTimer = 0;
+      if(stage === 'idle'){ speak(fruits.at(-1),'call'); }
+      if(stage === 'build'){ speak(fruits.at(-1),'build'); }
+    }
+  }
+
+  /* 3. celebrate 阶段随机欢呼气泡 */
+  if(stage === 'celebrate' && Math.random() < 0.3){
+     const f = fruits[Math.random()*fruits.length|0];
+     if(f) speak(f,'cheer');
+  }
+}
+
+setInterval(tick, 1000);   // 每秒跑一次，不受隐藏标签降频影响
