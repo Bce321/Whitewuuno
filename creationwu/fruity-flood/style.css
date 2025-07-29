@@ -41,3 +41,9 @@ html, body {
 
 @keyframes fade  { 0% {opacity:1} 100% {opacity:0} }
 @keyframes float { 0% {opacity:1; transform:translateY(0)} 100% {opacity:0; transform:translateY(-24px)} }
+
+/* 为适应各种大小的屏幕 */
+.game-wrap {
+  transform-origin: center center; /* 以中心缩放，保持居中 */
+}
+

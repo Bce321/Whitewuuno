@@ -188,7 +188,23 @@ function triggerWave(){
   spawnTimer = 0;
 }
 
-cvs.addEventListener("pointerdown", triggerWave);
+  // 长按3秒触发海浪“大洪水”
+let pressTimer=null, moved=false, sx=0, sy=0;
+
+cvs.addEventListener('pointerdown', e=>{
+  moved=false; sx=e.clientX; sy=e.clientY;
+  pressTimer = setTimeout(()=>{ triggerWave(); pressTimer=null; }, 300);
+});
+cvs.addEventListener('pointermove', e=>{
+  if(!pressTimer) return;
+  const dx=e.clientX - sx, dy=e.clientY - sy;
+  if (Math.hypot(dx,dy) > 15) { clearTimeout(pressTimer); pressTimer=null; } // 滑动就不触发
+});
+['pointerup','pointercancel','pointerleave'].forEach(ev=>{
+  cvs.addEventListener(ev, ()=>{ if(pressTimer){ clearTimeout(pressTimer); pressTimer=null; } });
+});
+
+
 
 /***** 9) 渲染（每帧） *****/
 function drawBackground(){
@@ -206,7 +222,7 @@ function drawCakes(){
   const gap = 12;
   const totalW = cakes.length * w + (cakes.length - 1) * gap;
   let x = (cvs.width - totalW) / 2;
-  const y = cvs.height - h - 32;  // 底部上来 32px
+  const y = cvs.height - h - 264;  // 底部上来 264px
 
   for (let i=0; i<cakes.length; i++){
     ctx.drawImage(IMG.cake, x, y);
@@ -278,6 +294,17 @@ function loop(){
   // 渲染时钟：每帧重画。
   requestAnimationFrame(loop);
 })();
+
+/***** 11) 修正：为适应不同屏幕大小，进行整体缩放 *****/
+function fitScale(){
+  const baseW = 1536, baseH = 1024;
+  const s = Math.min(window.innerWidth / baseW, window.innerHeight / baseH, 1); // 只缩小
+  const el = document.querySelector('.game-wrap');
+  el.style.transform = `scale(${s})`;
+}
+window.addEventListener('resize', fitScale);
+fitScale();
+
 
 /*
   —— 使用说明 ——
