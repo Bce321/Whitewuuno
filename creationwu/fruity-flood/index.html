@@ -1,15 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <title>Fruity Flood</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="style.css">
-  <script defer src="game.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fruity Flood (fresh build)</title>
+  <link rel="stylesheet" href="style.css" />
+  <!--
+    说明：
+    - 页面只有一个包裹层 .game-wrap 和一张画布 #game。
+    - 所有视觉都在 canvas 上绘制；
+      唯一的 HTML 叠加元素是“对话气泡”（小 div，绝对定位到 .game-wrap）。
+  -->
 </head>
 <body>
   <div class="game-wrap">
+    <!-- 固定尺寸画布。保持与背景图一致的 1536×1024 尺寸。 -->
     <canvas id="game" width="1536" height="1024"></canvas>
   </div>
+
+  <!-- 主脚本：包含资源预加载、渲染循环、时间轴（阶段机）、海浪交互等。 -->
+  <script defer src="game.js"></script>
 </body>
 </html>

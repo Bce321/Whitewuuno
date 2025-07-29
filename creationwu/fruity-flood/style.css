@@ -1,55 +1,43 @@
-/* 整页把游戏区域居中显示 */
-html,body{
-   margin:0;
-   min-height:100vh;            /* 关键：铺满整个视口高度 */
-   width:100%;                 /* 关键：让 flex 容器横向也占满 */
-   display:flex;            /* ① 开启 Flex 布局 */
-   align-items:center;      /* ② 垂直居中 */
-   justify-content:center;  /* ③ 水平居中 */
-   background:#0e1b48;      /* 深蓝或你喜欢的背景色 */
-   touch-action:none;
+/*
+  页面居中显示 1536×1024 的游戏区域；
+  四周留深蓝背景是设计选择（可当「留白」）。
+*/
+html, body {
+  margin: 0;
+  min-height: 100vh;        /* 铺满视口高度 */
+  width: 100%;              /* Flex 占满宽 */
+  display: flex;            /* 居中容器 */
+  align-items: center;      /* 垂直居中 */
+  justify-content: center;  /* 水平居中 */
+  background: #0e1b48;      /* 深蓝背景（你可替换） */
+  touch-action: none;       /* 允许捕获触控拖动 */
 }
 
-.game-wrap{
-  width:1536px;
-  height:1024px;
-  position:relative;          /* 给 .bubble 定位基准 */
+/* 固定游戏区域尺寸（与画布一致）。
+   对话气泡会相对它进行绝对定位。 */
+.game-wrap {
+  width: 1536px;
+  height: 1024px;
+  position: relative;
 }
 
-/* 画布 用它自身的 width/height 像素尺寸渲染 */
-#game{display:block;}          /* 保留 display:block 即可 */
+/* 画布本身无需额外样式；display:block 去掉默认空隙。 */
+#game { display: block; }
 
-/* Emoji 对话气泡保持不变，但 top/left 需相对 .game-wrap */
-.bubble{
-  position:absolute;
-  /* 其余同前… */
+/* 对话气泡（HTML div 叠加在最上层）。 */
+.bubble {
+  position: absolute;
+  padding: 3px 7px;
+  font-size: 18px;                 /* 你可根据设备再调 */
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  border-radius: 6px;
+  pointer-events: none;            /* 不影响点击浪 */
+  animation: fade 2.5s ease-out forwards;  /* 普通气泡：淡出 */
 }
 
-/* Emoji 对话气泡 */
-.bubble{
-  position:absolute;
-  padding:3px 7px;
-  font-size:18px;
-  background:rgba(0,0,0,.55);
-  color:#fff;
-  border-radius:6px;
-  pointer-events:none;
- animation:fade 2.5s ease-out forwards;   /* 普通气泡仅淡出 ✱ 用 float 动画 */
-}
+/* 惊慌专用：向上漂浮并淡出（用在海浪触发瞬间的少量小人）。 */
+.bubble.float { animation: float 2.5s ease-out forwards; }
 
-/* 新增：专供惊叫用的漂浮动画 */
-.bubble.float{ animation:float 2.5s ease-out forwards; }
-
-@keyframes fade  {0%{opacity:1}100%{opacity:0}}
-@keyframes float{
-  0%  {opacity:1; transform:translateY(0);}
-  100%{opacity:0; transform:translateY(-24px);}  /* 向上漂 24px */
-}
-
-/* 宽度 < 1536 时整块 .game-wrap 按比例缩小，取满屏 */
-@media (max-width: 1536px){
-  .game-wrap{
-    transform: scale(calc(100vw / 1536));
-    transform-origin: top left;
-  }
-}
+@keyframes fade  { 0% {opacity:1} 100% {opacity:0} }
+@keyframes float { 0% {opacity:1; transform:translateY(0)} 100% {opacity:0; transform:translateY(-24px)} }
