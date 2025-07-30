@@ -15,6 +15,25 @@
   --fs-body:1rem;   /* 16px */
 }
 
+/* 1️⃣.01 主题色与字号变量设置 */
+
+.chinar-text {
+  color: var(--chinar);
+}
+.chinar-text mark {
+  background-color: transparent;
+  color: var(--chinar-hi);
+  font-weight: bold;
+}
+.erynn-text {
+  color: var(--erynn);
+}
+.erynn-text mark {
+  background-color: transparent;
+  color: var(--erynn-hi);
+  font-weight: bold;
+}
+
 
 /* 2️⃣ 基础排版 */
 *{box-sizing:border-box;}
@@ -27,6 +46,15 @@ body{
 h1{font-size:var(--fs-h1);margin:1.5rem 0 .8rem;font-weight:600;}
 h2{font-size:var(--fs-h2);margin:1.2rem 0 .6rem;font-weight:600;}
 p {font-size:var(--fs-body);line-height:1.6;margin:.8rem 0;}
+
+/* 2️⃣.01  为<article>的背景加半透明白底 */
+.article-wrapper {
+  background: rgba(255,255,255,0.75); /* 半透明白底 */
+  border-radius: 12px; /* 圆角更柔和 */
+  padding: 1rem; /* 内间距 */
+  margin-bottom: 1rem; /* 底部留白 */
+}
+
 
 /* 3️⃣ 链接 */
 a{color:var(--erynn);text-decoration:none;}
@@ -71,7 +99,20 @@ a:hover{text-decoration:underline;}
 }
 .site-bar a{color:var(--erynn); font-size:.9rem;}
 /* 让正文避开固定头 */
-main{padding-top:64px;}
+
+/* 顶栏高度变量：桌面与手机分别给足 */
+:root{ --sitebar-h: 96px; }              /* 桌面：试试96 */
+@media (max-width: 768px){ :root{ --sitebar-h: 96px; } }
+@media (max-width: 420px){ :root{ --sitebar-h: 120px; } }  /* 手机两行导航时 */
+main{ padding-top: calc(var(--sitebar-h) + 14px); }        /* 预留一点富余 */
+
+/* 让正文避开固定顶栏 */
+main{ padding-top: calc(var(--sitebar-h) + 12px); }
+
+/* 锚点跳转时也不被顶栏挡住（可选） */
+h1, h2, h3, [id]{ scroll-margin-top: calc(var(--sitebar-h) + 12px); }
+
+
 
 
 /* --- 页面底栏榻榻米背景 --- */
@@ -124,3 +165,6 @@ footer.grass{
   background: url('/assets/img/grass.jpg') center/cover no-repeat;
   z-index: -1;
 }
+
+/* 技术栈使用的可选美化 */
+.structure details{margin-top:.6rem} .structure summary{cursor:pointer;user-select:none}

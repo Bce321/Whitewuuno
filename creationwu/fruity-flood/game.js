@@ -78,6 +78,10 @@ let waveCooldown = false;         // 浪冷却中？
 let waveCooldownStart = 0;
 const WAVE_COOLDOWN_MS = 5000;    // 冷却 5s
 
+// 0731新增：统计用（全局一次性定义）
+let runStart = Date.now();  // 本轮起点（开局或最近一次海浪后）
+let waveCount = 0;          // 海浪累计次数
+
 /***** 4) 小工具：对话气泡 *****/
 const LINES = {
   call  : ["🤔","👋","❓"],
@@ -174,6 +178,8 @@ function triggerWave(){
   wavePhase = 1;
   waveX = 0; waveY = 0;
   waveStart = performance.now();
+  waveCount++;           // 统计海浪触发次数
+  runStart = Date.now(); // 重置“本轮计时”的起点
 
   // 少量随机小人冒“惊慌”
   fruits.slice().sort(()=>0.5-Math.random()).slice(0, Math.min(5, fruits.length))
@@ -188,9 +194,14 @@ function triggerWave(){
   spawnTimer = 0;
 }
 
-  // 长按3秒触发海浪“大洪水”
-let pressTimer=null, moved=false, sx=0, sy=0;
+// 双击画布 → 触发海浪“大洪水”（适配代理/桌面）
+cvs.addEventListener('dblclick', e=>{
+  e.preventDefault();
+  triggerWave();
+});
 
+  // 长按3秒触发海浪“大洪水”（适配移动端）
+let pressTimer=null, moved=false, sx=0, sy=0;
 cvs.addEventListener('pointerdown', e=>{
   moved=false; sx=e.clientX; sy=e.clientY;
   pressTimer = setTimeout(()=>{ triggerWave(); pressTimer=null; }, 300);
@@ -198,11 +209,12 @@ cvs.addEventListener('pointerdown', e=>{
 cvs.addEventListener('pointermove', e=>{
   if(!pressTimer) return;
   const dx=e.clientX - sx, dy=e.clientY - sy;
-  if (Math.hypot(dx,dy) > 15) { clearTimeout(pressTimer); pressTimer=null; } // 滑动就不触发
+  if (Math.hypot(dx,dy) > 15) { clearTimeout(pressTimer); pressTimer=null; }
 });
 ['pointerup','pointercancel','pointerleave'].forEach(ev=>{
   cvs.addEventListener(ev, ()=>{ if(pressTimer){ clearTimeout(pressTimer); pressTimer=null; } });
 });
+
 
 
 
@@ -305,12 +317,57 @@ function fitScale(){
 window.addEventListener('resize', fitScale);
 fitScale();
 
+// ===== HUD：右上角监视窗（点击/右键切换显示） =====
+(function attachHUD(){
+  // 按钮（右上角小圆点）
+  const btn = document.createElement('div');
+  Object.assign(btn.style, {
+    position:'fixed', top:'12px', right:'12px', zIndex:9999,
+    width:'28px', height:'28px', borderRadius:'14px',
+    background:'rgba(0,0,0,.45)', color:'#fff',
+    font:'14px/28px ui-monospace,Consolas,monospace',
+    textAlign:'center', cursor:'pointer', userSelect:'none'
+  });
+  btn.textContent = 'ℹ';
+  document.body.appendChild(btn);
+
+  // 面板
+  const hud = document.createElement('div');
+  Object.assign(hud.style, {
+    position:'fixed', top:'48px', right:'12px', zIndex:9999,
+    padding:'8px 10px', borderRadius:'8px',
+    background:'rgba(0,0,0,.65)', color:'#fff',
+    font:'12px/1.4 ui-monospace,Consolas,monospace',
+    display:'none', whiteSpace:'nowrap', pointerEvents:'auto'
+  });
+  document.body.appendChild(hud);
+
+  let hudOn = false;
+  function toggleHUD(){
+    hudOn = !hudOn;
+    hud.style.display = hudOn ? 'block' : 'none';
+  }
+
+  // 左键点击切换
+  btn.addEventListener('click', (e)=>{ e.preventDefault(); toggleHUD(); });
+  // 右键切换（并阻止默认菜单）
+  btn.addEventListener('contextmenu', (e)=>{ e.preventDefault(); toggleHUD(); });
+
+  // 每秒刷新 HUD 内容
+  function fmt(ms){ const s=Math.floor(ms/1000), m=Math.floor(s/60), ss=s%60;
+    return `${m}:${String(ss).padStart(2,'0')}`; }
+  setInterval(()=>{
+    const since = Date.now() - runStart;
+    hud.textContent =
+      `⏱ ${fmt(since)}  |  🍓 ${fruits.length}  |  🍰 ${cakes.length}  |  🌊 ${waveCount}`;
+  }, 1000);
+})();
 
 /*
   —— 使用说明 ——
   1) 打开 index.html：几秒内会出现第一批水果小人；
   2) 5 分钟：进入 build 阶段；10 分钟：第 1 个蛋糕出现；之后每 5 分钟 +1，最多 5 个；
-  3) 点击画布：触发海浪（5s 动画）；浪退去后冷却 5s 才能再次点击；
+  3) 双击或长按画布：触发海浪（5s 动画）；浪退去后冷却 5s 才能再次点击；
   4) 若首次点击没看到浪，可能是浪图仍在加载：第二次点击应可见（也可等待预加载完成再开场）。
   5) 如需调整节奏：
      - 刷水果间隔：改 SPAWN_INTERVAL（毫秒）；
