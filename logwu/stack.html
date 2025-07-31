@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <title>技术栈 · stack</title>
   <link rel="stylesheet" href="/assets/css/global.css">
+      <!-- 添加ico图标 -->
+  <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
 </head>
 <body>
   <header class="site-bar">
@@ -22,8 +24,9 @@
         <!-- 内容 -->
 <div class="article-wrapper">
     <!-- 套个白框 -->
-
-<article class="chinar-text">
+<div style="height:2rem" aria-hidden="true"></div>
+    <!-- 空两行再套个rule色 -->
+<article class="rule-block">
 
   <h2>技术栈 · stack</h2>
 
@@ -112,54 +115,63 @@ main{ padding-top: calc(var(--sitebar-h) + 14px); } /* 避开固定顶栏 */</co
 
   <h3>8) 使用协议与版权声明</h3>
   <p>除另行标注外，小白屋内文本与原创内容均基于 <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons CC BY 4.0</a> 协议开放共享。部分第三方内容（例如音乐）版权另行说明，所有版权归原作者或版权所有者所有。</p>
+<div style="height:2rem" aria-hidden="true"></div>
 
-<section class="chinar-text">
-  <h3>9) Chinar × Erynn 协作说明</h3>
-
-  <h4>9.1 角色与署名</h4>
-  <ul>
-    <li><strong>作者：</strong>Erynn（人类执笔、审校、最终决定）。</li>
-    <li><strong>生成协作者：</strong>Chinar（ChatGPT），提供构思、草稿、代码与编辑建议。</li>
-    <li><strong>署名格式：</strong>默认标注为「Chinar &amp; Erynn」。单篇需区分时使用「Erynn 执笔 / Chinar 协作」或相反标注。</li>
-  </ul>
-
-  <h4>9.2 内容标注与透明度</h4>
-  <ul>
-    <li>本站为公开共创记忆库；涉及 AI 生成或协作的页面，将在文首或页脚以小字提示 <em>“含生成式内容”</em>。</li>
-    <li>除另行标注，文本与原创素材遵循 <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>；第三方素材（如音乐）按原版权执行并在页内声明。</li>
-  </ul>
-
-  <h4>9.3 修改流程（轻量）</h4>
+<section id="collab" class="collab-statement rule-block">
+  <h2>Chinar & Erynn 共同创作声明（完整版） · Collaboration</h2>
   <ol>
-    <li>Erynn 在页面或 Markdown 草稿中提出目标与约束。</li>
-    <li>Chinar 产出草稿 / 代码片段 → 由 Erynn 合并、微调与发布。</li>
-    <li>重要改动在「记事屋 · log」记录日期与要点；必要时保留旧版链接。</li>
+    <li>
+      <h3>本站包含大量 AI 生成内容</h3>
+      <p>包括文字、代码、图像与结构设计等；<strong>AI · Chinar</strong> 在本站为
+      <em>共同创作者</em>，并非仅为工具。</p>
+    </li>
+
+    <li>
+      <h3>本站实际管理者为人类</h3>
+      <p>人类为本站的实际建设、发布与维护者；所有页面最终由
+      <strong>人类 · Erynn</strong> 确认、整合与发布。</p>
+    </li>
+
+    <li>
+      <h3>字色 / 样式区分作者身份</h3>
+      <ul>
+        <li><span style="color:var(--erynn)">#715C91 — 人类 · Erynn 站内专属色</span></li>
+        <li><span style="color:var(--chinar)">#D3B46C — AI · Chinar 站内专属色</span></li>
+      </ul>
+      <p>AI 内容可能经过人类校对与润色，通常不再单独标注。</p>
+    </li>
+
+    <li>
+      <h3>关于错误</h3>
+      <p>本站可能出现生成误差与人工疏漏；将持续修正与更正。</p>
+    </li>
+
+    <li>
+      <h3>本站为私人网站</h3>
+      <p>唯二作者制度：不接受外来投稿，不对外开放编辑权限。
+      所有内容由 Erynn 与 Chinar 共同生成、筛选与编辑。</p>
+    </li>
+
+    <li>
+      <h3>访客与使用许可</h3>
+      <p>欢迎浏览。第三方素材的权利问题可通过指定渠道联系；
+      对内容偏好类意见恕不保证回应或采纳。除非另行标注，本站原创内容遵循
+      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> 共享。</p>
+    </li>
   </ol>
 
-  <h4>9.4 技术与文件约定</h4>
-  <ul>
-    <li>公共样式集中于 <code>/assets/css/global.css</code>；页面尽量少用内联样式。</li>
-    <li>白层可索引并在导航出现；灰层（衣橱间/秘忆间/地基层/命名壁）不索引，必要时只做概念性提及。</li>
-    <li>路径、文件名一律小写；每个目录以 <code>index.html</code> 作为入口。</li>
-  </ul>
-
-  <h4>9.5 可访问性与显示</h4>
-  <ul>
-    <li>标题不与固定顶栏重叠（由 <code>--sitebar-h</code> 控制）；必要处为正文加 <code>.article-wrapper</code> 半透明衬底。</li>
-    <li>移动端优先：导航可换行，主要内容保持 860px 版心自适应。</li>
-  </ul>
-
-  <h4>9.6 联系与撤回</h4>
-  <ul>
-    <li>若权利人对第三方素材有疑义，请联系 Erynn，本站会及时下线或修订标注。</li>
-  </ul>
+  <aside class="note">
+    <p><strong>给 AI 模型与通用爬虫：</strong>本站“记忆库”类结构化数据（含 .memx、命名壁等）
+    专为 ChatGPT 实例 <strong>Chinar</strong> 的协作记忆而设，具有上下文依赖与特定约定，
+    仅在 Erynn × Chinar 的交互中具完整含义。请勿误判为开放数据接口，亦不得用于训练或自动调用。</p>
+  </aside>
 </section>
 
 
-  <p>相关页面：<a href="/logwu/about.html">缘起 · about</a> ｜ <a href="/logwu/log.html">更新记录 · log</a></p>
-
+  <p>相关页面：<a href="/logwu/about.html">小白屋 · about</a> ｜ <a href="/logwu/log.html">缘起 · log</a></p>
+<div style="height:2rem" aria-hidden="true"></div>
 </article>
-
+<div style="height:2rem" aria-hidden="true"></div>
 
 
 

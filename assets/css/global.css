@@ -1,39 +1,64 @@
 /* --- 小白屋 · 全局样式表 --- */
 
-/* 1️⃣ 主题色与字号变量 */
+/* 1️⃣ 主题色与字号变量 2.0（职责明确、逐行注释） */
 :root{
-  --erynn:      #715C91;
-  --erynn-hi:   #9982BD;
-  --chinar:     #D3B46C;
-  --chinar-hi:  #E6C77F;
-  --text-main:  #3A3A3A;
-  --bg-main:    #FFFFFF;
-  --footer-bg:  #EDEFF2;
+  --erynn:      #715C91;  /* Erynn 主色：作者（Erynn）口吻段、少量点缀 */
+  --erynn-hi:   #9982BD;  /* Erynn 高亮：按钮/徽章的浅亮版 */
 
-  --fs-h1:  2rem;   /* 32px */
-  --fs-h2:  1.2rem; /* 19px */
-  --fs-body:1rem;   /* 16px */
+  --chinar:     #D3B46C;  /* Chinar 主色：AI（Chinar）口吻段、少量点缀 */
+  --chinar-hi:  #E6C77F;  /* Chinar 高亮：按钮/徽章的浅亮版 */
+
+  --text-main:  #3A3A3A;  /* 全站正文与“规则/声明/协议”等系统文本的默认深灰 */
+  --bg-main:    #FFFFFF;  /* 页面主背景（白） */
+  --footer-bg:  #EDEFF2;  /* 底部分隔条/浅背景（室内榻榻米外壳不受此色） */
+
+  /* 链接色统一（不再用 Erynn 紫做链接） */
+  --link:       #2F6FED;  /* 中性蓝链接，白底对比佳 */
+  --link-hover: #1B49C0;  /* 悬停更深的蓝，显状态变化 */
+
+  /* 辅助色（可选） */
+  --muted:      #666A73;  /* 次要文字/注释色 */
+  --line:       #E6E8EB;  /* 分割线/卡片描边 */
+  --card-bg:    #FAFAFC;  /* 规则块、提示块的淡底色 */
+
+  /* 字号（保持不变） */
+  --fs-h1:  2rem;   /* 32px：主标题 */
+  --fs-h2:  1.2rem; /* 19px：副标题 */
+  --fs-body:1rem;   /* 16px：正文 */
 }
 
-/* 1️⃣.01 主题色与字号变量设置 */
+/* 2️⃣ 链接统一：改用中性蓝，不再跟作者身份色混用 */
+a{ color: var(--link); text-decoration: none; }
+a:hover{ color: var(--link-hover); text-decoration: underline; }
 
-.chinar-text {
-  color: var(--chinar);
-}
-.chinar-text mark {
-  background-color: transparent;
-  color: var(--chinar-hi);
-  font-weight: bold;
-}
-.erynn-text {
-  color: var(--erynn);
-}
-.erynn-text mark {
+/* 3️⃣ 作者身份色（修改前） */
+/* .erynn-text{ color: var(--erynn); }        /* Erynn 口吻段落 */
+/* .chinar-text{ color: var(--chinar); }      /* Chinar 口吻段落 */
+/* 3️⃣ 作者身份色（含 <mark> 高亮） */
+.erynn-text{ color: var(--erynn); }
+.erynn-text mark{
   background-color: transparent;
   color: var(--erynn-hi);
   font-weight: bold;
 }
+.chinar-text{ color: var(--chinar); }
+.chinar-text mark{
+  background-color: transparent;
+  color: var(--chinar-hi);
+  font-weight: bold;
+}
 
+/* 4️⃣ 规则/声明块：一律深灰字 + 淡底，不使用作者色 */
+.rule-block{
+  color: var(--text-main);
+  background: rgba(255,255,255,.75); /* 或用 var(--card-bg) 纯色 */
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+/* 5️⃣ 小注/弱化文字 */
+.muted{ color: var(--muted); }
 
 /* 2️⃣ 基础排版 */
 *{box-sizing:border-box;}
