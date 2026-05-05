@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>酒馆骰子 · AI叙事卡牌</title>
+    <style>
+        body {
+            background: #2b2118;
+            color: #ece3d0;
+            font-family: 'Segoe UI', 'Courier New', monospace;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+        .card-deck {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin: 2rem 0;
+        }
+        button {
+            background: #4a3628;
+            color: #f0e4c6;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+        button.selected {
+            background: #c79a6e;
+            color: #1f1a14;
+            font-weight: bold;
+            box-shadow: 0 0 0 2px #ffd966;
+        }
+        .story-box {
+            background: #1f1a14;
+            border-left: 6px solid #c79a6e;
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            white-space: pre-wrap;
+            font-size: 1rem;
+            line-height: 1.5;
+            min-height: 150px;
+        }
+        .api-input {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        input, textarea {
+            background: #3a2c22;
+            border: 1px solid #5e4b38;
+            color: #ffe6c7;
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+        input {
+            flex: 2;
+            min-width: 200px;
+        }
+        textarea {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        hr {
+            border-color: #4a3628;
+        }
+        .small {
+            font-size: 0.8rem;
+            color: #b98f64;
+        }
+    </style>
+</head>
+<body>
+
+<h2>🍶 酒馆骰子 · 叙事卡牌</h2>
+<p class="small">点选卡牌，让AI为你即兴讲述一则短故事。</p>
+
+<div class="api-input">
+    <input type="password" id="apiKey" placeholder="DeepSeek / OpenAI API Key" style="flex:3;">
+    <select id="modelSelect">
+        <option value="deepseek-chat">DeepSeek-chat</option>
+        <option value="gpt-3.5-turbo">GPT-3.5-turbo</option>
+        <option value="gpt-4">GPT-4</option>
+    </select>
+    <button id="setKeyBtn">🔑 保存密钥</button>
+</div>
+
+<hr>
+
+<div class="card-deck" id="guestDeck">
+    <button data-type="客人">👤 老客</button>
+    <button data-type="客人">👩 女人</button>
+    <button data-type="客人">🪵 卖炭翁</button>
+    <button data-type="客人">🎼 少年</button>
+    <button data-type="客人">🚶 行脚僧</button>
+</div>
+<div class="card-deck" id="wineDeck">
+    <button data-type="酒">🍶 浊酒</button>
+    <button data-type="酒">🍂 菊花白</button>
+    <button data-type="酒">🌾 米酒</button>
+    <button data-type="酒">🔥 烧春</button>
+    <button data-type="酒">🍇 葡萄酿</button>
+    <button data-type="酒">🧊 寒潭清</button>
+</div>
+<div class="card-deck" id="seasonDeck">
+    <button data-type="季候">🌸 桃花·昏</button>
+    <button data-type="季候">🍂 梧叶·夜</button>
+    <button data-type="季候">❄️ 雪·晓</button>
+    <button data-type="季候">🌧️ 梅雨·昼</button>
+    <button data-type="季候">🍁 红叶·暮</button>
+    <button data-type="季候">🌙 月见·宵</button>
+    <button data-type="季候">🎋 竹风·午</button>
+    <button data-type="季候">🌿 菖蒲·朝</button>
+</div>
+<div class="card-deck" id="eventDeck">
+    <button data-type="事件">📜 讨碗水</button>
+    <button data-type="事件">🎋 檐下避雨</button>
+    <button data-type="事件">💔 失手打碎酒碗</button>
+    <button data-type="事件">🔔 远处庙钟响了三下</button>
+    <button data-type="事件">🌬️ 门帘被风吹起</button>
+    <button data-type="事件">🐎 蹄声远去</button>
+    <button data-type="事件">🧂 送一碟盐豆</button>
+    <button data-type="事件">🕯️ 油灯将熄</button>
+    <button data-type="事件">🍂 落叶飘进杯中</button>
+    <button data-type="事件">🌙 醉后说梦话</button>
+</div>
+
+<div style="margin: 1rem 0;">
+    <button id="rollBtn">🎲 抽卡 & 请AI讲述</button>
+    <button id="resetSelection">清空选中</button>
+</div>
+
+<div class="story-box" id="storyBox">
+    （选择客人、酒、季候、事件各一枚，然后点击抽卡）
+</div>
+
+<script>
+    let selected = { 客人: null, 酒: null, 季候: null, 事件: null };
+    let apiKey = localStorage.getItem('apiKey') || '';
+    let apiModel = localStorage.getItem('apiModel') || 'deepseek-chat';
+    const typeMap = { '客人': 'guest', '酒': 'wine', '季候': 'season', '事件': 'event' };
+
+    function saveApi() {
+        const key = document.getElementById('apiKey').value.trim();
+        const model = document.getElementById('modelSelect').value;
+   

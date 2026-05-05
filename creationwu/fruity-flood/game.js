@@ -31,6 +31,8 @@ const ASSETS = {
     "pics/peach0121.png",
     "pics/sberry0121.png",
   ],
+  // 音乐调用
+  music : "music/theme.mp3",
 };
 const IMG = { fruits: [] };
 
@@ -42,6 +44,9 @@ function loadImage(src){
     img.src = src;
   });
 }
+  // 还是音乐调用
+let bgm = null;
+let musicMuted = false;
 
 async function preloadAll(){
   IMG.bg    = await loadImage(ASSETS.bg);
@@ -181,6 +186,17 @@ function triggerWave(){
   waveCount++;           // 统计海浪触发次数
   runStart = Date.now(); // 重置“本轮计时”的起点
 
+  // 海浪触发时暂停音乐
+if (bgm){
+  bgm.pause();
+
+  setTimeout(()=>{
+    if (!musicMuted){
+      bgm.play().catch(()=>{});
+    }
+  }, 10000);
+}
+
   // 少量随机小人冒“惊慌”
   fruits.slice().sort(()=>0.5-Math.random()).slice(0, Math.min(5, fruits.length))
         .forEach(f=>speak(f, "panic"));
@@ -305,6 +321,19 @@ function loop(){
   setInterval(tick, 1000);
   // 渲染时钟：每帧重画。
   requestAnimationFrame(loop);
+  // 初始化背景音乐
+bgm = new Audio(ASSETS.music);
+bgm.loop = true;
+bgm.volume = 0.4;
+
+// 浏览器自动播放限制兼容
+function tryStartMusic(){
+  if (bgm && bgm.paused && !musicMuted){
+    bgm.play().catch(()=>{});
+  }
+}
+
+document.addEventListener("pointerdown", tryStartMusic, { once:true });
 })();
 
 /***** 11) 修正：为适应不同屏幕大小，进行整体缩放 *****/
@@ -316,6 +345,47 @@ function fitScale(){
 }
 window.addEventListener('resize', fitScale);
 fitScale();
+
+
+// ===== HUD：左上角静音按钮 =====
+(function attachMusicButton(){
+
+  const btn = document.createElement('div');
+
+  Object.assign(btn.style, {
+    position:'fixed',
+    top:'12px',
+    left:'12px',
+    zIndex:9999,
+    width:'32px',
+    height:'32px',
+    borderRadius:'16px',
+    background:'rgba(0,0,0,.45)',
+    color:'#fff',
+    font:'16px/32px sans-serif',
+    textAlign:'center',
+    cursor:'pointer',
+    userSelect:'none'
+  });
+
+  btn.textContent = '🔊';
+
+  btn.addEventListener('click', ()=>{
+
+    musicMuted = !musicMuted;
+
+    if (bgm){
+      bgm.muted = musicMuted;
+    }
+
+    btn.textContent = musicMuted ? '🔇' : '🔊';
+
+    tryStartMusic();
+  });
+
+  document.body.appendChild(btn);
+
+})();
 
 // ===== HUD：右上角监视窗（点击/右键切换显示） =====
 (function attachHUD(){
